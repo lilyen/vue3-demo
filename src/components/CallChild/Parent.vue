@@ -7,7 +7,7 @@
   </div>
   <div>
     use call back get child data
-    <p v-if="RefChild">child value on parent: {{ cbChildVal }}</p>
+    <p>child value on parent: {{ cbChildVal }}</p>
     <button v-on:click="callChildCbs">
     parent use call back call child method
   </button>
