@@ -1,22 +1,29 @@
 <template>
   parent components
   <div>
-      use ref get child data
+    use ref get child data
     <p v-if="RefChild">child value on parent: {{ RefChild.childValue }}</p>
-  <button v-on:click="callChild">parent call child method</button>
+    <button v-on:click="callChild">parent call child method</button>
   </div>
   <div>
     use call back get child data
-    <p>child value on parent: {{ cbChildVal }}</p>
+    <p>
+      child value on parent:
+      <template v-for="v in cbChildVal"> {{ v }}, </template>
+    </p>
     <button v-on:click="callChildCbs">
-    parent use call back call child method
-  </button>
+      parent use call back call child method
+    </button>
   </div>
-  
 
   <Child ref="RefChild"></Child>
-  <Child2 v-bind:onParentFun="onChildFun"></Child2>
-  <Child2 v-bind:onParentFun="onChildFun" v-on:setCbChildVal="setCbChildVal"></Child2>
+  <Child2
+    v-for="i in 2"
+    v-bind:key="i"
+    v-bind:keyVal="i - 1"
+    v-bind:onParentFun="onChildFun"
+    v-on:setCbChildVal="setCbChildVal"
+  ></Child2>
 </template>
 
 <script>
@@ -37,16 +44,18 @@ export default {
       RefChild.value?.childAdd();
     };
 
-    const cbChildVal = ref(0);
-    const setCbChildVal = (val)=>{
-        cbChildVal.value = val;
-    }
+    const cbChildVal = ref([]);
+    const setCbChildVal = (index, val) => {
+      cbChildVal.value[index] = val;
+    };
     let childCbs = [];
     const onChildFun = (fn) => {
       childCbs.push(fn);
       const cleanUp = () => {
-          childCbs = childCbs.filter((item) => item !== fn);
-          console.log(`cleanUp call back method ${fn.ref}, childCbs num ${childCbs.length}`);
+        childCbs = childCbs.filter((item) => item !== fn);
+        console.log(
+          `cleanUp call back method ${fn.ref}, childCbs num ${childCbs.length}`
+        );
       };
       return cleanUp;
     };
@@ -54,7 +63,14 @@ export default {
       childCbs.forEach((fn) => fn());
     };
 
-    return { RefChild, callChild, onChildFun, callChildCbs, cbChildVal,setCbChildVal  };
+    return {
+      RefChild,
+      callChild,
+      onChildFun,
+      callChildCbs,
+      cbChildVal,
+      setCbChildVal,
+    };
   },
 };
 </script>

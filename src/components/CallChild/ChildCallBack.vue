@@ -16,6 +16,10 @@ export default {
       type: Function,
       required: true,
     },
+    keyVal: {
+      type: Number,
+      default: 0,
+    },
   },
   setup(props, context) {
     const childValue = ref(0);
@@ -26,10 +30,10 @@ export default {
     const cleanUp = props.onParentFun(childAdd);
     onUnmounted(() => cleanUp());
 
-    watch(childValue, (newVal) =>{
-        context.emit("setCbChildVal", newVal);
-    })
-    
+    watch(childValue, (newVal) => {
+      context.emit("setCbChildVal", props.keyVal, newVal);
+    });
+
     return { childValue, childAdd };
   },
 };
