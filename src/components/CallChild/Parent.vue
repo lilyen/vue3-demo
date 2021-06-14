@@ -17,6 +17,7 @@
   </div>
 
   <Child ref="RefChild"></Child>
+  <Child v-for="i in 2" v-bind:key="i" v-bind:ref="setItemRef"></Child>
   <Child2
     v-for="i in 2"
     v-bind:key="i"
@@ -40,8 +41,21 @@ export default {
   },
   setup() {
     const RefChild = ref();
+    let RefChilds = ref([]);
     const callChild = () => {
+      console.log('single', RefChild.value);
       RefChild.value?.childAdd();
+
+      for(var key in RefChilds.value){
+        RefChilds.value[key].childAdd();
+      }      
+    };
+    const setItemRef = (el) => {
+      const key = RefChilds.value.length;
+      console.log(key, ' ', el)
+      if(!RefChilds.value.find(cd=> cd === el)){
+        RefChilds.value[key] = el;
+      }
     };
 
     const cbChildVal = ref([]);
@@ -65,6 +79,7 @@ export default {
 
     return {
       RefChild,
+      setItemRef,
       callChild,
       onChildFun,
       callChildCbs,
