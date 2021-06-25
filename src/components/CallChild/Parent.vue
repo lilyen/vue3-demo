@@ -5,6 +5,12 @@
     <p v-if="RefChild">child value on parent: {{ RefChild.childValue }}</p>
     <button v-on:click="callChild">parent call child method</button>
   </div>
+  <Child v-if="a <= 3" ref="RefChild"></Child>
+  <template v-if="a <= 3">
+    <Child v-for="i in 2" v-bind:key="i" v-bind:ref="el => setItemRef(el, i)"></Child>
+  </template>
+  
+
   <div>
     use call back get child data
     <p>
@@ -16,8 +22,6 @@
     </button>
   </div>
 
-  <Child ref="RefChild"></Child>
-  <Child v-for="i in 2" v-bind:key="i" v-bind:ref="setItemRef"></Child>
   <Child2
     v-for="i in 2"
     v-bind:key="i"
@@ -40,20 +44,22 @@ export default {
     Child2,
   },
   setup() {
+    const a = ref(1);
     const RefChild = ref();
     let RefChilds = ref([]);
     const callChild = () => {
-      console.log('single', RefChild.value);
+      a.value++;
+      console.log("single", RefChild.value);
       RefChild.value?.childAdd();
 
-      for(var key in RefChilds.value){
+      for (var key in RefChilds.value) {
         RefChilds.value[key].childAdd();
-      }      
+      }
     };
-    const setItemRef = (el) => {
-      const key = RefChilds.value.length;
-      console.log(key, ' ', el)
-      if(!RefChilds.value.find(cd=> cd === el)){
+    const setItemRef = (el, key) => {
+      // const key = RefChilds.value.length;
+      console.log(key, " ", el);
+      if (!RefChilds.value.find((cd) => cd === el)) {
         RefChilds.value[key] = el;
       }
     };
@@ -79,12 +85,14 @@ export default {
 
     return {
       RefChild,
+      RefChilds,
       setItemRef,
       callChild,
       onChildFun,
       callChildCbs,
       cbChildVal,
       setCbChildVal,
+      a,
     };
   },
 };
