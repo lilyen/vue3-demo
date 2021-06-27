@@ -57,11 +57,7 @@ export default {
       }
     };
     const setItemRef = (el, key) => {
-      // const key = RefChilds.value.length;
-      console.log(key, " ", el);
-      if (!RefChilds.value.find((cd) => cd === el)) {
-        RefChilds.value[key] = el;
-      }
+      RefChilds.value[key] = el;
     };
 
     const cbChildVal = ref([]);
